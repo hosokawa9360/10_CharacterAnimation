@@ -83,11 +83,9 @@ var playerLayer = cc.Layer.extend({
 var Player = cc.Sprite.extend({
   ctor: function() {
     this._super();
-    this.initWithFile(res.player_sheet);
     this.workingFlag = false;
     this.xspeed = 0;
     this.yspeed = 0;
-    //  thisPlayerArray = new Array(res.player01_png, res.player02_png);
     for (i = 0; i < 7; i++) {　　　　　　
       for (j = 0; j < 10; j++) {
         if (level[i][j] == 3) {
@@ -117,13 +115,33 @@ var Player = cc.Sprite.extend({
         //実行
         this.runAction(action);
     */
+    /*
+        //３．テクスチャーからスプライトフレームを切り出す方法
+            //スプライトフレームを格納する配列
+            var texture = cc.textureCache.addImage(res.player_sheet);
+            //スプライトフレームを作成
+            var frame1 = new cc.SpriteFrame.createWithTexture(texture, cc.rect(0, 0, 96, 96));
+            var frame2 = new cc.SpriteFrame.createWithTexture(texture, cc.rect(96, 0, 96, 96));
+            //スプライトフレームを配列に登録
+            var animationframe = [];
+            animationframe.push(frame1);
+            animationframe.push(frame2);
+            //スプライトフレームの配列を連続再生するアニメーションの定義
+            var animation = new cc.Animation(animationframe, 0.08);
+            //永久ループのアクションを定義
+            var action = new cc.RepeatForever(new cc.animate(animation));
+            //実行
+            this.runAction(action);
+    */
 
-//３．テクスチャーからスプライトフレームを切り出す方法
-    //スプライトフレームを格納する配列
-    var texture = cc.textureCache.addImage(res.player_sheet);
-    //スプライトフレームを作成
-    var frame1 = new cc.SpriteFrame.createWithTexture(texture, cc.rect(0, 0, 96, 96));
-    var frame2 = new cc.SpriteFrame.createWithTexture(texture, cc.rect(96, 0, 96, 96));
+
+    // スプライトシートをキャッシュに登録
+    cc.spriteFrameCache.addSpriteFrames(res.player_plist, res.player_sheet);
+
+    // スプライトフレームを取得 player01,player02はplistの中で定義されいいる
+    var frame1 = cc.spriteFrameCache.getSpriteFrame("player01");
+    var frame2 = cc.spriteFrameCache.getSpriteFrame("player02");
+
     //スプライトフレームを配列に登録
     var animationframe = [];
     animationframe.push(frame1);
@@ -133,8 +151,8 @@ var Player = cc.Sprite.extend({
     //永久ループのアクションを定義
     var action = new cc.RepeatForever(new cc.animate(animation));
     //実行
+    this.initWithFile(res.player_sheet);
     this.runAction(action);
-
   },
 
   /*

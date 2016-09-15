@@ -50,3 +50,26 @@ var action = new cc.RepeatForever(new cc.animate(animation));
 //実行
 this.runAction(action);
 ```
+## 4.　plist（スプライトシート＋切り出し用のXML）を用いたアニメーション
+
+直接画像ファイルから読み込む場合は画像ファイルのパスを引数で渡すだけなのですが、TxturePackerなど作成したスプライトシート(plist)を取り込む場合は手順が変わります。
+```
+// スプライトシートをスプライトフレームキャッシュに登録
+cc.spriteFrameCache.addSpriteFrames(res.player_plist, res.player_sheet);
+
+// スプライトフレームを取得 player01,player02はplistの中で定義されいいる
+var frame1 = cc.spriteFrameCache.getSpriteFrame("player01");
+var frame2 = cc.spriteFrameCache.getSpriteFrame("player02");
+
+//スプライトフレームを配列に登録
+var animationframe = [];
+animationframe.push(frame1);
+animationframe.push(frame2);
+//スプライトフレームの配列を連続再生するアニメーションの定義
+var animation = new cc.Animation(animationframe, 0.08);
+//永久ループのアクションを定義
+var action = new cc.RepeatForever(new cc.animate(animation));
+//実行
+this.initWithFile(res.player_sheet);
+this.runAction(action);
+```

@@ -1,5 +1,6 @@
 var res = {
     player_sheet : "res/playerSheet_96x192.png",
+    player_plist : "res/player.plist",
     player01_png : "res/player01_96x96.png",
     player02_png : "res/player02_96x96.png",
     ground_png : "res/ground_96x96.png",
