@@ -1,5 +1,5 @@
 var res = {
-    player_sheet : "res/player_96x192.ping",
+    player_sheet : "res/playerSheet_96x192.png",
     player01_png : "res/player01_96x96.png",
     player02_png : "res/player02_96x96.png",
     ground_png : "res/ground_96x96.png",
