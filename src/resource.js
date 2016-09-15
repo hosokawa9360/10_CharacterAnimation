@@ -5,7 +5,9 @@ var res = {
     player02_png : "res/player02_96x96.png",
     ground_png : "res/ground_96x96.png",
     background_png : "res/background01.jpg",
-    block_png : "res/block.png"
+    block_png : "res/block.png",
+    bat_frames :"res/bat_frames.png"
+
 };
 
 var g_resources = [];
