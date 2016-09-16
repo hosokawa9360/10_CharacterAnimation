@@ -1,6 +1,18 @@
 var HoverHeight = 300; //ホバリング
 var RiseHeight = 240; //Rise上昇
 
+var enemyBat;
+
+var enemyLayer = cc.Layer.extend({
+   ctor: function() {
+      this._super();
+      enemyBat = new EnemyBat();
+      this.addChild(enemyBat);
+      //cc.eventManager.addListener(listener, this);
+
+   }
+
+});
 var EnemyBat = cc.Sprite.extend({
   ctor: function() {
     this._super();
@@ -15,8 +27,6 @@ var EnemyBat = cc.Sprite.extend({
         }
       }
     }
-
-    //this.schedule(this.update, 0.08);
 
     var animationframe = [];
     //スプライトフレームを格納する配列
@@ -58,7 +68,8 @@ var EnemyBat = cc.Sprite.extend({
       if (this.getPosition().y < player.y + 20) velocity_y += 0.05;
       //8の字旋回軌道をsin計算で適当に補正
       velocity_y += 0.075 * Math.sin(this.FrameCount * 0.015) * Math.sin(this.FrameCount * 0.04);
-      console.log(velocity_x, velocity_y);
+
+      //console.log(velocity_x, velocity_y);
 
       this.velocity.x = velocity_x;
       this.velocity.y = velocity_y;

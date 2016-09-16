@@ -152,3 +152,116 @@ return fStart + ((fEnd - fStart) * fPercent);
 }
 
 ```
+
+
+## 6.　シングルタッチによるプレイヤの左右移動、ジャンプの処理
+
+`playerLayer`に左ボタン、右ボタン、ジャンプボタンを実装する
+後で、リスナーの中でどのボタンが押されたかを判定するために、setTag（番号）を
+用いて、tag情報を設定する
+```
+//左ボタン
+leftBtn = cc.Sprite.create(res.leftbutton_png);
+this.addChild(leftBtn, 0);
+leftBtn.setPosition(60, 40);
+leftBtn.setOpacity(128);
+leftBtn.setTag(1);
+//右ボタン
+rightBtn = cc.Sprite.create(res.rightbutton_png);
+this.addChild(rightBtn, 0);
+rightBtn.setPosition(150, 40);
+rightBtn.setOpacity(128);
+rightBtn.setTag(2);
+
+//ジャンプボタン
+jumpBtn = cc.Sprite.create(res.rightbutton_png);
+jumpBtn.setRotation(-90);
+this.addChild(jumpBtn, 0);
+jumpBtn.setPosition(winSize.width - 60, 40);
+jumpBtn.setOpacity(128);
+jumpBtn.setTag(3);
+```
+Playerのクラスに、移動スピードやジャンプ中を表すフラグを用意する
+```
+this.xSpeed = 0;
+this.ySpeed = 0;
+this.jumpFlag = false;
+```
+さらに、update関数が実行するように実装
+```
+      this.scheduleUpdate();
+   },
+```
+現在位置のxSpeed ,ySpeedで更新する
+```
+//移動のため
+update: function(dt) {
+   console.log(this.jumpFlag, this.ySpeed);
+
+   if (this.xSpeed > 0) { //スピードが正の値（右方向移動）
+      //　向きを判定させる
+      this.setFlippedX(false);
+   }
+   if (this.xSpeed < 0) { //スピードが負の値（左方向移動）
+      this.setFlippedX(true);
+   }
+   //プレイヤーを降下させる処理　ジャンプボタンが押されてないときで、プレイヤが空中にある場合
+   if (this.jumpFlag == false) {
+      if (this.getPosition().y < tileSize * 1.6) this.ySpeed = 0;
+      else this.ySpeed = this.ySpeed - 0.5;
+
+   }
+   //位置を更新する
+   this.setPosition(this.getPosition().x + this.xSpeed, this.getPosition().y + this.ySpeed);
+
+}
+ ```
+ //タッチリスナーの実装
+  ```
+ var listener = cc.EventListener.create({
+    event: cc.EventListener.TOUCH_ONE_BY_ONE,
+    // swallowTouches: true,
+
+    onTouchBegan: function(touch, event) {
+       var target = event.getCurrentTarget();
+       var location = target.convertToNodeSpace(touch.getLocation());
+       var spriteSize = target.getContentSize();
+       var spriteRect = cc.rect(0, 0, spriteSize.width, spriteSize.height);
+
+       if (cc.rectContainsPoint(spriteRect, location)) {
+          console.log(target.getTag() + "Btnがタッチされました");
+
+          //タッチしたスプライトが左ボタンだったら
+          if (target.getTag()　 == 1) {
+             player.xSpeed = -2.5;
+             leftBtn.setOpacity(255);
+             rightBtn.setOpacity(128);
+          } else {
+             //タッチしたスプライトが右ボタンだったら
+             if (target.getTag()　 == 2) {
+                player.xSpeed = 2.5;
+                rightBtn.setOpacity(255);
+                leftBtn.setOpacity(128);
+             }
+          }
+          //タッチしたスプライトがジャンプボタンだったら
+          if (target.getTag()　 == 3) {
+            //ジャンプ中でなかったら上昇速度を設定
+            if (player.jumpFlag == false && player.ySpeed == 0) player.ySpeed = 9;
+             player.jumpFlag = true;//ジャンプ中を表すflagをon
+             jumpBtn.setOpacity(255);
+          }
+       }
+       return true;
+    },
+    //タッチを止めたときは、移動スピードを0にする
+    onTouchEnded: function(touch, event) {
+       player.jumpFlag = false;
+       player.xSpeed = 0;
+       leftBtn.setOpacity(128);
+       rightBtn.setOpacity(128);
+       jumpBtn.setOpacity(128);
+    }
+
+ })
+  ```
