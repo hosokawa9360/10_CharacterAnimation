@@ -109,6 +109,8 @@ var playerLayer = cc.Layer.extend({
       cc.eventManager.addListener(listener.clone(), rightBtn);
       cc.eventManager.addListener(listener.clone(), jumpBtn);
 
+      cc.eventManager.addListener(keylistener, this);
+
    }
 
 });
@@ -264,4 +266,38 @@ var listener = cc.EventListener.create({
       jumpBtn.setOpacity(128);
    }
 
-})
+});
+
+//キーボードリスナーの実装
+var keylistener = cc.EventListener.create({
+   event: cc.EventListener.KEYBOARD,
+   // swallowTouches: true,
+
+   onKeyPressed: function(keyCode, event) {
+      if (keyCode == 65) { // a-Keyで左に移動
+         player.xSpeed = -2.5;
+         leftBtn.setOpacity(255);
+         rightBtn.setOpacity(128);
+      }
+      if (keyCode == 68) { // d-Keyで左に移動
+         player.xSpeed = 2.5;
+         rightBtn.setOpacity(255);
+         leftBtn.setOpacity(128);
+      }
+      if (keyCode == 32 || keycode == 38) { // スペースキーか上矢印キーでジャンプ
+         if (player.jumpFlag == false && player.ySpeed == 0) player.ySpeed = 9;
+         player.jumpFlag = true;
+         jumpBtn.setOpacity(255);
+      }
+      return true;
+   },
+   onKeyReleased: function(keyCode, event) {
+      player.jumpFlag = false;
+      player.xSpeed = 0;
+      //player.ySpeed = 0;
+      leftBtn.setOpacity(128);
+      rightBtn.setOpacity(128);
+      jumpBtn.setOpacity(128);
+   },
+
+});
